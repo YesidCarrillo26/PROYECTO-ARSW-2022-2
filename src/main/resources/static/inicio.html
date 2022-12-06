@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html>
+
+<title>RuletaCasinoOnline</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="css/product.css">
+<link rel="stylesheet" type="text/css" href="css/rouletteCSS.css" />
+<link rel="stylesheet/less" type="text/css" href="css/testRoulette.less" />
+<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js" ></script>
+
+<script src="js/inicio.js"></script>
+<script src="js/roulette.js"></script>
+<script src="js/apiclient.js"></script>
+<script src="js/cookieModule.js"></script>
+<script src="js/app.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+<script src="/webjars/jquery/jquery.min.js"></script>
+<script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+<script type="text/javascript">
+    if(cookieModule.getCookies("usuario") == ""){
+        location.href ="index.html";
+    };
+</script>
+
+
+</head>
+
+<body onload="rouletteModule.temporizador()" >
+<div class="row" >
+    <div id="mySidenav" class="sidenav"></div>
+    <div id="Welcome" class="container">
+    
+        <h1 align="center" style="margin-top: 15px ">RuletaCasinoOnline</h1>
+        <div class="us" align="left" style="margin-top: 10px "></div>
+        <div class="cn" align="left" style="margin-top: 10px "></div>
+        <div>
+		<button type="button"onclick="module.exit()" tyle="text-align: right;width:220px" class="btn btn-danger">Log out</button>
+		</div>
+		<div class="apuestas">
+		<button class="button n100" onclick="rouletteModule.changeapuesta(100)" align="right" style="margin-top: 15px" class="btn btn-danger">100</button>
+		<button class="button n500" onclick="rouletteModule.changeapuesta(500)" align="right" style="margin-top: 15px" class="btn btn-danger">500</button>
+		<button class="button n1000" onclick="rouletteModule.changeapuesta(1000)" align="right" style="margin-top: 15px" class="btn btn-danger">1000</button>
+		<button class="button n5000" onclick="rouletteModule.changeapuesta(5000)" align="right" style="margin-top: 15px" class="btn btn-danger">5000</button>
+		<button class="button n10000" onclick="rouletteModule.changeapuesta(10000)" align="right" style="margin-top: 15px" class="btn btn-danger">10000</button>
+		</div>
+    </div>
+    <div class="table" id="tableRoulette">
+	    <div class="contain" >
+	        <div class="bl2 zero">
+	            <button class="greenitems" value="0" id ="0" onclick="rouletteModule.apostar(this)">0</button>
+	        </div>
+	
+	        <div class="bl">
+	            <button class="items red" id ="3" value="3" onclick="rouletteModule.apostar(this)"><span>3</span></button>
+	            <button class="items black" id ="6" value="6" onclick="rouletteModule.apostar(this)">6</button>
+	            <button class="items red" id ="9" value="9"  onclick="rouletteModule.apostar(this)">9</button>
+	            <button class="items red" id ="12" value="12" onclick="rouletteModule.apostar(this)">12</button>
+	            <button class="items black" id ="2" value="2" onclick="rouletteModule.apostar(this)">2</button>
+	            <button class="items red" id ="5" value="5" onclick="rouletteModule.apostar(this)">5</button>
+	            <button class="items black" id ="8" value="8" onclick="rouletteModule.apostar(this)">8</button>
+	            <button class="items black"  id ="11" value="11" onclick="rouletteModule.apostar(this)">11</button>
+	            <button class="items red" id ="1" value="1" onclick="rouletteModule.apostar(this)">1</button>
+	            <button class="items black" id ="4" value="4" onclick="rouletteModule.apostar(this)">4</button>
+	            <button class="items red" id ="7" value="7" onclick="rouletteModule.apostar(this)">7</button>
+	            <button class="items black" id ="10" value="10" onclick="rouletteModule.apostar(this)">10</button>
+	        </div>
+	        <div class="bl">
+	            <button class="items black" id ="15" value="15" onclick="rouletteModule.apostar(this)">15</button>
+	            <button class="items red" id ="18" value="18"onclick="rouletteModule.apostar(this)">18</button>
+	            <button class="items red" id =21 value="21"onclick="rouletteModule.apostar(this)">21</button>
+	            <button class="items black" id ="24" value="24" onclick="rouletteModule.apostar(this)">24</button>
+	            <button class="items red" id ="14" value="14" onclick="rouletteModule.apostar(this)">14</button>
+	            <button class="items black" id ="17" value="17" onclick="rouletteModule.apostar(this)">17</button>
+	            <button class="items black" id ="20" value="20" onclick="rouletteModule.apostar(this)">20</button>
+	            <button class="items red" id ="23" value="23" onclick="rouletteModule.apostar(this)">23</button>
+	            <button class="items black" id ="13" value="13" onclick="rouletteModule.apostar(this)">13</button>
+	            <button class="items red" id ="16" value="16" onclick="rouletteModule.apostar(this)">16</button>
+	            <button class="items red" id ="19" value="19" onclick="rouletteModule.apostar(this)">19</button>
+	            <button class="items black" id ="22" value="22" onclick="rouletteModule.apostar(this)">22</button>
+	        </div>
+	        <div class="bl">
+	            <button class="items red" id ="27" value="27" onclick="rouletteModule.apostar(this)">27</button>
+	            <button class="items red" id ="30" value="30" onclick="rouletteModule.apostar(this)">30</button>
+	            <button class="items black" id ="33" value="33" onclick="rouletteModule.apostar(this)">33</button>
+	            <button class="items red" id ="36" value="36" onclick="rouletteModule.apostar(this)">36</button>
+	            <button class="items black" id ="26" value="26" onclick="rouletteModule.apostar(this)">26</button>
+	            <button class="items black" id ="29" value="29" onclick="rouletteModule.apostar(this)">29</button>
+	            <button class="items red" id ="32" value="32" onclick="rouletteModule.apostar(this)">32</button>
+	            <button class="items black" id ="35" value="35" onclick="rouletteModule.apostar(this)">35</button>
+	            <button class="items red" id ="25" value="25" onclick="rouletteModule.apostar(this)">25</button>
+	            <button class="items black" id ="28" value="28" onclick="rouletteModule.apostar(this)">28</button>
+	            <button class="items black" id ="31" value="31" onclick="rouletteModule.apostar(this)">31</button>
+	            <button class="items red" id ="34" value="34" onclick="rouletteModule.apostar(this)">34</button>
+	        </div>
+	        <div class="order">
+	            <button class="items" id ="2to1-3" value="2to1-3" onclick="rouletteModule.apostar(this)">2 to 1</button>
+	            <button class="items" id ="2to1-2" value="2to1-2" onclick="rouletteModule.apostar(this)">2 to 1</button>
+	            <button class="items" id ="2to1-1" value="2to1-1" onclick="rouletteModule.apostar(this)">2 to 1</button>
+	        </div>
+	        <button class="items box-1" id ="1to12" value="1to12" onclick="rouletteModule.apostar(this)">1 to 12</button>
+	        <button class="items box-2" id ="13to24" value="13to24" onclick="rouletteModule.apostar(this)">13 to 24</button>
+	        <button class="items box-3" id ="25to36" value="25to36" onclick="rouletteModule.apostar(this)">25 to 36</button>
+	        <div class=" box-4">
+	            <button class="items" id ="1to18" value="1to18" onclick="rouletteModule.apostar(this)">1 to 18</button>
+	            <button class="items" id ="even" value="even" onclick="rouletteModule.apostar(this)">Even</button>
+	        </div>
+	        <div class=" box-5">
+	            <button class="items black" id ="black" value="black" onclick="rouletteModule.apostar(this)">Black</button>
+	            <button class="items red" id ="red" value="red" onclick="rouletteModule.apostar(this)">Red</button>
+	        </div>
+	        <div class=" box-6">
+	            <button class="items" id ="odd" value="odd" onclick="rouletteModule.apostar(this)">Odd</button>
+	            <button class="items" id ="19to36" value="19to36" onclick="rouletteModule.apostar(this)">19 to 36</button>
+	        </div>
+	    </div>
+	</div>
+	<div class="main">
+        <div class="plate" id="plate">
+            <ul class="inner">
+	           <li class="number"><label><input type="radio" name="pit" value="32" /><span class="pit">32</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="15" /><span class="pit">15</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="19" /><span class="pit">19</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="4" /><span class="pit">4</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="21" /><span class="pit">21</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="2" /><span class="pit">2</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="25" /><span class="pit">25</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="17" /><span class="pit">17</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="34" /><span class="pit">34</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="6" /><span class="pit">6</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="27" /><span class="pit">27</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="13" /><span class="pit">13</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="36" /><span class="pit">36</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="11" /><span class="pit">11</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="30" /><span class="pit">30</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="8" /><span class="pit">8</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="23" /><span class="pit">23</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="10" /><span class="pit">10</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="5" /><span class="pit">5</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="24" /><span class="pit">24</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="16" /><span class="pit">16</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="33" /><span class="pit">33</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="1" /><span class="pit">1</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="20" /><span class="pit">20</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="14" /><span class="pit">14</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="31" /><span class="pit">31</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="9" /><span class="pit">9</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="22" /><span class="pit">22</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="18" /><span class="pit">18</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="29" /><span class="pit">29</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="7" /><span class="pit">7</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="28" /><span class="pit">28</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="12" /><span class="pit">12</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="35" /><span class="pit">35</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="3" /><span class="pit">3</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="26" /><span class="pit">26</span></label></li>
+	           <li class="number"><label><input type="radio" name="pit" value="0" /><span class="pit">0</span></label></li>
+            </ul>
+	           <div class="data">
+	               <div class="data-inner">
+	                   <div class="mask"></div>
+	                   <div class="result">
+	                       <div class="result-number">00</div>
+	                       <div class="result-color">red</div>
+	                   </div>
+	               </div>
+	           </div>
+        </div>
+	           <div class="previous-results">
+	               <ol class="previous-list">
+	                   <li class='visuallyhidden placeholder'>No results yet.</li>
+	               </ol>
+	           </div>
+	</div>
+</body>
+<script src="js/roulette.js"></script>
+</html>

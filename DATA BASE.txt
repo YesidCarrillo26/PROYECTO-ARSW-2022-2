@@ -1,0 +1,20 @@
+
+CREATE TABLE users (
+	id int,
+	nombre varchar,
+	fechaN varchar,
+	telefono int,
+	correo varchar,
+	passw varchar,
+	points int
+);
+
+
+INSERT INTO users (id,nombre,fechan,telefono,correo,passw,points) 	
+VALUES (1,'Yesid','8/11/2022',12345,'yesidcaa@hotmail.com','yesid.david',1000);
+
+INSERT INTO users (id,nombre,fechan,telefono,correo,passw,points) 	
+VALUES (2,'David','8/11/2022',12346,'david@hotmail.com','yesid.david',5000);
+
+
+DROP TABLE "Proyecto".users;

@@ -1,0 +1,208 @@
+# Variable 'Name' was defined in the Variables tab
+# Variable 'NameComponent' was defined in the Variables tab
+# Variable 'Namespace' was defined in the Variables tab
+# Variable 'Project' was defined in the Variables tab
+# Variable 'service.image.name' was defined in the Variables tab
+# Variable 'yml.file.name' was defined in the Variables tab
+trigger:
+  branches:
+    include:
+    - refs/heads/develop
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: refs/heads/develop
+jobs:
+- job: Job_2
+  displayName: App Test
+  pool:
+    vmImage: ubuntu-20.04
+  steps:
+  - checkout: self
+    clean: False
+  - task: SonarQubePrepare@4
+    inputs:
+      SonarQube: 'RuletaCasinoOnline'
+      scannerMode: 'MSBuild'
+      projectKey: davidleon-m_RuletaCasinoOnline
+      projectName: RuletaCasinoOnline
+      projectVersion: '$(Build.BuildId)'
+      extraProperties: 'sonar.branch.name=dev'
+  - task: PowerShell@2
+    displayName: Sonar branch
+    inputs:
+      targetType: inline
+      script: >
+        $params = "$env:SONARQUBE_SCANNER_PARAMS" -replace '"sonar.branch.name":"[\w,/,-]*"\,?'
+        Write-Host "##vso[task.setvariable variable=SONARQUBE_SCANNER_PARAMS]$params"
+  - task: DotNetCoreCLI@2
+    displayName: Restore
+    continueOnError: True
+    inputs:
+      command: restore
+      projects: '**/*.csproj'
+      feedRestore: 3cbd354e-d360-4cf7-841b-343781fb3606
+  - task: CmdLine@2
+    displayName: Command Line Script
+    inputs:
+      script: >-
+        echo "files"
+        ls
+  - task: DotNetCoreCLI@2
+    displayName: dotnet build
+    continueOnError: True
+    inputs:
+      projects: '**/*.sln'
+  - task: DotNetCoreCLI@1
+    displayName: test
+    continueOnError: True
+    inputs:
+      projects: '**/*[Tt]est**/*.csproj'
+  - task: SonarQubeAnalyze@5
+    displayName: Run code Analysis
+  - task: SonarQubePublish@5
+    displayName: Publish Quality Gate Result
+    inputs:
+      pollingTimeoutSec: '300'
+- job: Job_3
+  displayName: App dockerize develop
+  dependsOn: Job_2
+  pool:
+    vmImage: ubuntu-20.04
+  steps:
+  - checkout: self
+    clean: False
+  - task: EncodeSemverToInteger@2
+    displayName: 'Generate semantic version'
+    enabled:  false
+    inputs:
+      SourceSemver: '$(GitVersion_SemVer)'
+      OutputVariable: 'VersionCode'
+      MinorBits: '5'
+      PatchBits: '4'
+      PreReleaseTagBits: '2'
+      PreReleaseTagMap: '{"rc": 2, "beta": 1, "alpha": 0, "unstable": 0}'
+      PreReleaseNumberBits: '9'
+      TotalBits: '31'
+  - task: Docker@1
+    displayName: 'generar imagen de docker'
+    inputs:
+      containerregistrytype: 'Azure Container Registry'
+      azureSubscriptionEndpoint: 'OPI-DevTest(958c9eca-9550-430d-8a62-a1c3a932c248)'
+      azureContainerRegistry: 'craeuopidevcomp.azurecr.io'
+      command: 'Build an image'
+      dockerFile: 'dockerfile'
+      imageName: '$(Name):$(Build.BuildId)'
+  - task: Docker@1
+    displayName: 'publicar imagen en contenedor'
+    inputs:
+      containerregistrytype: 'Azure Container Registry'
+      azureSubscriptionEndpoint: 'OPI-DevTest(958c9eca-9550-430d-8a62-a1c3a932c248)'
+      azureContainerRegistry: 'craeuopidevcomp.azurecr.io'
+      command: 'Push an image'
+      dockerFile: 'dockerfile'
+      imageName: '$(Name):$(Build.BuildId)'
+- job: Job_4
+  displayName: App dockerize release
+  dependsOn: Job_2
+  pool:
+    vmImage: ubuntu-20.04
+  steps:
+  - checkout: self
+    clean: False
+  - task: Docker@1
+    displayName: 'generar imagen de docker'
+    inputs:
+      containerregistrytype: 'Azure Container Registry'
+      azureSubscriptionEndpoint: 'OPI-DevTest(958c9eca-9550-430d-8a62-a1c3a932c248)'
+      azureContainerRegistry: 'craeuopiqascomp.azurecr.io'
+      command: 'Build an image'
+      dockerFile: 'dockerfile'
+      imageName: '$(Name):$(Build.BuildId)'
+  - task: Docker@1
+    displayName: 'publicar imagen en contenedor'
+    inputs:
+      containerregistrytype: 'Azure Container Registry'
+      azureSubscriptionEndpoint: 'OPI-DevTest(958c9eca-9550-430d-8a62-a1c3a932c248)'
+      azureContainerRegistry: 'craeuopiqascomp.azurecr.io'
+      command: 'Push an image'
+      dockerFile: 'dockerfile'
+      imageName: '$(Name):$(Build.BuildId)'
+- job: Job_5
+  displayName: App dockerize main
+  dependsOn: Job_2
+  pool:
+    vmImage: ubuntu-20.04
+  steps:
+  - checkout: self
+    clean: False
+  - task: Docker@1
+    displayName: 'generar imagen de docker'
+    inputs:
+      containerregistrytype: 'Azure Container Registry'
+      azureSubscriptionEndpoint: 'OPI-Production(77d36dd1-1bc6-412e-972a-e85048a39ce3)'
+      azureContainerRegistry: 'craeuopiprdcomp.azurecr.io'
+      command: 'Build an image'
+      dockerFile: 'dockerfile'
+      imageName: '$(Name):$(Build.BuildId)'
+  - task: Docker@1
+    displayName: 'publicar imagen en contenedor'
+    inputs:
+      containerregistrytype: 'Azure Container Registry'
+      azureSubscriptionEndpoint: 'OPI-Production(77d36dd1-1bc6-412e-972a-e85048a39ce3)'
+      azureContainerRegistry: 'craeuopiprdcomp.azurecr.io'
+      command: 'Push an image'
+      dockerFile: 'dockerfile'
+      imageName: '$(Name):$(Build.BuildId)'
+- job: Job_6
+  displayName: App DB + drop
+  dependsOn: Job_5
+  pool:
+    vmImage: windows-2019
+  steps:
+  - checkout: self
+    clean: False
+  - task: file-creator@6
+    displayName: 'File creator'
+    inputs:
+      filepath: '$(build.artifactstagingdirectory)/variables2.json'
+      filecontent: |
+        {
+        "type.Build":"$(Build.SourceVersionMessage)"
+        }
+      fileoverwrite: true
+  - task: CmdLine@2
+    inputs:
+      script: 'tr -d ''\n'' < $(build.artifactstagingdirectory)/variables2.json > $(build.artifactstagingdirectory)/variables.json'
+  - task: CmdLine@2
+    inputs:
+      script: |
+        rm -rf .git
+        rm -rf .gitignore
+  - task: CopyFiles@2
+    inputs:
+      Contents: '**'
+      TargetFolder: '$(build.artifactstagingdirectory)/code'
+  - task: MSBuild@1
+    displayName: 'azure sql DACPAC generator'
+    enabled: false
+    inputs:
+      solution: '**/*.sqlproj'
+      configuration: 'release'
+  - task: CopyFiles@2
+    inputs:
+      Contents: |
+        **.yaml
+        **.yml
+        **.json
+      TargetFolder: '$(build.artifactstagingdirectory)/templates'
+  - task: CopyFiles@2
+    inputs:
+      Contents: '**/*.dacpac'
+      TargetFolder: '$(build.artifactstagingdirectory)/dacpac'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: '$(Project)--$(NameComponent)'
+      publishLocation: 'Container'
