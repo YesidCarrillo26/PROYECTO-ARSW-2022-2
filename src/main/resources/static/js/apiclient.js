@@ -1,11 +1,11 @@
-const uri = "http://localhost:9090";
+
 var cookieModule = cookieModule;
 var apiclient = (function (){
 
     var numganador = function (callback){
         $.ajax({
             type: "GET",
-            url: uri + "/Nganador",
+            url: "/Nganador",
             contentType: "application/json; charset=utf-8",
             dataType: "text",
     		success: function(data) {
@@ -16,7 +16,7 @@ var apiclient = (function (){
     var time = function (callback){
         $.ajax({
             type: "GET",
-            url: uri + "/Time",
+            url: "/Time",
             contentType: "application/json; charset=utf-8",
             dataType: "text",
     		success: function(data) {
@@ -26,7 +26,7 @@ var apiclient = (function (){
     }
     var putApuesta = function (dataApuesta) {
         var putPromise = $.ajax({
-            url: uri + "/Papuestas" ,
+            url: "/Papuestas" ,
             type: "PUT",
             data: JSON.stringify(dataApuesta),
             contentType: "application/json"
@@ -34,7 +34,7 @@ var apiclient = (function (){
     }
     var crear = function (newUser) {
             $.ajax({
-                url: uri + "/ruleta/addUser",
+                url:"/ruleta/addUser",
                 type: 'POST',
                 data: JSON.stringify(newUser),
                 contentType: "application/json",
@@ -46,7 +46,7 @@ var apiclient = (function (){
     var validarUser = function(user){
     		var valor = user.correo;
     		$.ajax({
-                 url: uri + "/ruleta/User",
+                 url:"/ruleta/User",
                  type: 'POST',
                  data: JSON.stringify(user),
                  contentType: "application/json",
